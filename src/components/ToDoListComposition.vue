@@ -50,20 +50,18 @@ import $ from "jquery";
 import { onMounted } from "vue";
 //import axios from "axios";
 
-
 export default {
   setup() {
     //let toDoList = [];
     //let addItem = ref(null);
     //let itemStatus = ref(null);
-
     /**
      * This Lifecyclehook will generate an instance of dataTable for our ToDoList Table
-     * For Search & Pagings
+     * For Search & Pagings Functionality
      */
     onMounted(() => {
       $("#toDoTable").DataTable();
-    })
+    });
   },
 };
 </script>
