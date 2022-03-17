@@ -23,7 +23,7 @@
     $action = $_GET['action'];
     if (($ToDo->checkAction($action))) {
       if ($action === "retrieve") {
-        echo json_encode($ToDo->retrieveList());
+        echo $ToDo->retrieveList();
       }
     } else {
       echo 1; //Invalid Request

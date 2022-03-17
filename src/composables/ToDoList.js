@@ -6,7 +6,7 @@ const TO_DO_LIST = ref([]);
 const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
 // ===============================FUNCTIONS==========================================
 /**
- * This function will retrieve all of the data in the database (item, status, date_created)
+ * This function will retrieve all of the data from the database (id, item, status, date_created)
  * if the action specified is not include in the following
  * ('retrieve', 'update', 'delete', 'insert')
  * it will alert the user -> "Invalid Action Request" (callback == 1)
@@ -19,7 +19,7 @@ const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
       alert("Invalid Action Request");
     } else {
       TO_DO_LIST.value.splice(0, TO_DO_LIST.value.length); // delete all items -> array
-      TO_DO_LIST.value.push(response.data); // put all the data objects -> array
+      TO_DO_LIST.value.push(...response.data); // put all the data objects -> array
       console.log(TO_DO_LIST.value);
     }
   });

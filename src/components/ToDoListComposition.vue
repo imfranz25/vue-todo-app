@@ -29,21 +29,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(value, index) in TO_DO_LIST" :key="index">
-            <td>{{ index + 1 }}</td>
+          <tr v-for="value in TO_DO_LIST" :key="value.id">
+            <td>{{ value.id }}</td>
             <td>{{ value.item }}</td>
             <td>
               <span class="badge" :class="getBadgeClass(value.status)">
                 {{ value.status }}
               </span>
             </td>
-            <td>{{ value.date_created }}</td>
+            <td>{{ dateFormat(value.date_created) }}</td>
             <td>
               <div class="d-block">
                 <button class="btn btn-primary">Edit</button>
-                <button @click="deleteItem(index)" class="btn btn-danger mx-1">
-                  Delete
-                </button>
+                <button class="btn btn-danger mx-1">Delete</button>
               </div>
             </td>
           </tr>
@@ -73,7 +71,18 @@ import {
 export default {
   name: "TodoListComposition",
   setup() {
+    // ===============================INITIALIZATION==========================================
     let toDoItem = ref(null);
+    // ===============================FUNCTIONS==========================================
+    /**
+     * This function returns a new date format
+     * (e.g 01/0/2022 -> January 01, 2022)
+     * @param date -> sql date format e.g 2022-03-17 (Y-m-d)
+     */
+    let dateFormat = (date) => {
+      let format = { month: "long", day: "numeric", year: "numeric" };
+      return new Date(date).toLocaleString("en-US", format);
+    };
     // ===============================HOOKS==========================================
     /**
      * This Lifecyclehook will generate an instance of dataTable for our ToDoList Table
@@ -88,6 +97,7 @@ export default {
       addItem,
       getBadgeClass,
       deleteItem,
+      dateFormat,
     };
   },
 };
