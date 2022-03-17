@@ -15,14 +15,16 @@
 
   /*
     This condition test if $_GET[action] has a value
-    if none(no value) send a callback == 1
+    if none(no value) send a callback == 1 (Invalid Request Action)
     if have -> check if its a valid action
     if valid then proceed to the request action
   */
   if (isset($_GET['action'])) {
     $action = $_GET['action'];
     if (($ToDo->checkAction($action))) {
-      echo json_encode($action);
+      if ($action === "retrieve") {
+        echo json_encode($ToDo->retrieveList());
+      }
     } else {
       echo 1; //Invalid Request
     }
