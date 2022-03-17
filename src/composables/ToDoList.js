@@ -18,9 +18,9 @@ const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
     if (response.data == 1) {
       alert("Invalid Action Request");
     } else {
-      //TO_DO_LIST.value.splice(0, TO_DO_LIST.value.length); // delete all items -> array
-      //TO_DO_LIST.value.push(...response.data); // put all the data objects -> array
-      console.log(response.data);
+      TO_DO_LIST.value.splice(0, TO_DO_LIST.value.length); // delete all items -> array
+      TO_DO_LIST.value.push(response.data); // put all the data objects -> array
+      console.log(TO_DO_LIST.value);
     }
   });
 })();
