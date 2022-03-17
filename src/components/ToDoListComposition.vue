@@ -23,7 +23,8 @@
           <tr>
             <th>#</th>
             <th>My To-Do List</th>
-            <th>Item Status</th>
+            <th>Status</th>
+            <th>Date Created</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -36,11 +37,14 @@
                 {{ value.status }}
               </span>
             </td>
+            <td>{{ value.date_created }}</td>
             <td>
-              <button class="btn btn-primary">Edit</button>
-              <button @click="deleteItem(index)" class="btn btn-danger">
-                Delete
-              </button>
+              <div class="d-block">
+                <button class="btn btn-primary">Edit</button>
+                <button @click="deleteItem(index)" class="btn btn-danger mx-1">
+                  Delete
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
