@@ -6,9 +6,8 @@
   header("Access-Control-Allow-Headers: Content-Type");
 
   //Imports
-  require_once('../vendor/thingengineer/mysqli-database-class/MysqliDb.php'); // import@top !important
   require_once("ToDo.php"); //ToDo Class
-  require_once("conn.php"); //Connection Config
+  require_once("../database/conn.php"); //Connection Config
 
   //class instance ToDo ($conn -> comes from conn.php file where it is configured)
   $ToDo = new ToDo($conn);
