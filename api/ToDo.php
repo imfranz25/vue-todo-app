@@ -48,8 +48,19 @@
         'status' => "Pending",
         'date_created' => $this->conn->now()
       );
-      $add_item = $this->conn->insert ('todo_tbl', $data);
+      $add_item = $this->conn->insert('todo_tbl', $data);
       return ($add_item) ? 0 : 1;
+    }
+    /**
+     * This function will delete the specific record in the database
+     * based on the id specified in the parameter
+     * If it has successfully delete/affect a row return
+     * it will return 0 (SUCCESS) else 1 (FAILED)
+     */
+    public function deleteItem($id) {
+      $this->conn->where('id', $id);
+      $delete_item = $this->conn->delete('todo_tbl');
+      return ($delete_item) ? 0 : 1;
     }
   }
 ?>

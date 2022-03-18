@@ -20,7 +20,6 @@ let retrieveList = () => {
     } else {
       TO_DO_LIST.value.splice(0, TO_DO_LIST.value.length); // delete all items -> array
       TO_DO_LIST.value.push(...response.data); // put all the data objects -> array
-      console.log(TO_DO_LIST.value);
     }
   });
 };
@@ -38,6 +37,7 @@ let addItem = (item) => {
   }).then(function (response) {
     if (response.data === 0) {
       retrieveList();
+      alert("To-do List item successfully added");
     } else {
       alert("Something went wrong, please try again!");
     }
@@ -50,7 +50,18 @@ let addItem = (item) => {
  */
 let deleteItem = (id) => {
   if (confirm("Are you sure you want to delete this item ?")) {
-    console.log(id);
+    axios({
+      method: "post",
+      url: `${API_URL.value}?action=delete`,
+      data: { id: id },
+    }).then(function (response) {
+      if (response.data === 0) {
+        retrieveList();
+        alert("To-do List item successfully deleted");
+      } else {
+        alert("Something went wrong, please try again!");
+      }
+    });
   }
 };
 /**

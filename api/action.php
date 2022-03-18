@@ -23,15 +23,16 @@
     $action = $_GET['action'];
     //Invalid Request (will not proceed to the rest of the code) -> echo 1
     if (!($ToDo->checkAction($action))) echo 1;
-    //Valid Request type
+    //Valid Request types -> proceed to the action specified
     if ($action === "retrieve") {
       echo $ToDo->retrieveList();
     } else if ($action === "insert") {
       $item = $request->item;
       echo $ToDo->insertItem($item);
+    } else if ($action === "delete") {
+      $id = $request->id;
+      echo $ToDo->deleteItem($id);
     }
-  } else {
-    echo 1; //Invalid Request
-  }
+  } else { echo 1; }
 
 ?>

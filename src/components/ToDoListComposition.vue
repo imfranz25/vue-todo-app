@@ -32,12 +32,12 @@
           <tr v-for="(value, index) in TO_DO_LIST" :key="value.id">
             <td>{{ index + 1 }}</td>
             <td>{{ value.item }}</td>
+            <td>{{ dateFormat(value.date_created) }}</td>
             <td>
               <span class="badge" :class="getBadgeClass(value.status)">
                 {{ value.status }}
               </span>
             </td>
-            <td>{{ dateFormat(value.date_created) }}</td>
             <td>
               <div class="d-block">
                 <button class="btn btn-primary">Edit</button>
