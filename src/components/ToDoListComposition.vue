@@ -4,7 +4,7 @@
     <h1 class="text-center my-5">To-Do List App</h1>
     <!-- To-Do List Add Form -->
     <div class="d-flex justify-content-center">
-      <form @submit.prevent="addItem(toDoItem)">
+      <form @submit.prevent="sendItem">
         <div class="form-group row">
           <div class="col-10">
             <input type="text" class="form-control" v-model="toDoItem" />
@@ -18,7 +18,7 @@
     <!-- ** End To-Do List Add Form ** -->
     <!-- To-Do List Table -->
     <div class="mt-5">
-      <table class="table table-striped" id="toDoTable">
+      <table class="table table-striped border border-secondary" id="toDoTable">
         <thead>
           <tr>
             <th>#</th>
@@ -29,8 +29,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="value in TO_DO_LIST" :key="value.id">
-            <td>{{ value.id }}</td>
+          <tr v-for="(value, index) in TO_DO_LIST" :key="value.id">
+            <td>{{ index + 1 }}</td>
             <td>{{ value.item }}</td>
             <td>
               <span class="badge" :class="getBadgeClass(value.status)">
@@ -41,7 +41,12 @@
             <td>
               <div class="d-block">
                 <button class="btn btn-primary">Edit</button>
-                <button class="btn btn-danger mx-1">Delete</button>
+                <button
+                  @click="deleteItem(value.id)"
+                  class="btn btn-danger mx-1"
+                >
+                  Delete
+                </button>
               </div>
             </td>
           </tr>
@@ -53,19 +58,25 @@
   <!-- ** End To-Do List Container ** -->
 </template>
 
+<style scoped>
+@import "@/assets/styles/main.css";
+</style>
+
 <script>
+import $ from "jquery";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
-import $ from "jquery";
 import { ref, onMounted } from "vue";
 import {
   TO_DO_LIST,
   addItem,
   getBadgeClass,
   deleteItem,
+  retrieveList,
+  dateFormat,
 } from "@/composables/ToDoList.js";
 
 export default {
@@ -75,29 +86,29 @@ export default {
     let toDoItem = ref(null);
     // ===============================FUNCTIONS==========================================
     /**
-     * This function returns a new date format
-     * (e.g 01/0/2022 -> January 01, 2022)
-     * @param date -> sql date format e.g 2022-03-17 (Y-m-d)
+     * This seperate function will call the addItem
+     * and pass the value of toDoItem -> Trim the value
+     * after calling the function clear out the value of toDoItem
      */
-    let dateFormat = (date) => {
-      let format = { month: "long", day: "numeric", year: "numeric" };
-      return new Date(date).toLocaleString("en-US", format);
+    let sendItem = () => {
+      addItem(toDoItem.value.trim());
+      toDoItem.value = "";
     };
     // ===============================HOOKS==========================================
     /**
-     * This Lifecyclehook will generate an instance of dataTable for our ToDoList Table
-     * For Search & Pagings Functionality after the DOM is loaded
+     * This Lifecyclehook will call the function retrieveList
      */
     onMounted(() => {
+      retrieveList();
       $("#toDoTable").DataTable();
     });
     return {
       TO_DO_LIST,
       toDoItem,
-      addItem,
       getBadgeClass,
       deleteItem,
       dateFormat,
+      sendItem,
     };
   },
 };

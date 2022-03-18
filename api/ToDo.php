@@ -26,7 +26,7 @@
      * that is present in the database
      * return type object
      */
-    public function retrieveList(){
+    public function retrieveList() {
       $to_do = array();
       $columns = array("id", "item", "status", "date_created");
       $result = $this->conn->get("todo_tbl", null, $columns);
@@ -36,6 +36,20 @@
         }
       }
       return json_encode($to_do);
+    }
+    /**
+     * This function will insert a new todo list item in the database
+     * If it has successfully inserted a new item in todo table
+     * it will return 0 (SUCCESS) else 1 (FAILED)
+     */
+    public function insertItem($item) {
+      $data = array (
+        'item' => $item,
+        'status' => "Pending",
+        'date_created' => $this->conn->now()
+      );
+      $add_item = $this->conn->insert ('todo_tbl', $data);
+      return ($add_item) ? 0 : 1;
     }
   }
 ?>

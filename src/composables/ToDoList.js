@@ -13,7 +13,7 @@ const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
  * else proceed to the action specified (e.g retrieve -> retrieve data)
  * retrieveList function have self invoke behavior
  */
-(function retrieveList() {
+let retrieveList = () => {
   axios.get(`${API_URL.value}?action=retrieve`).then(function (response) {
     if (response.data == 1) {
       alert("Invalid Action Request");
@@ -23,16 +23,24 @@ const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
       console.log(TO_DO_LIST.value);
     }
   });
-})();
+};
 /**
  * This function adds an item in the array -> TO_DO_LIST []
  * status -> "PENDING" by default
+ * date_created -> "DATE TODAY"
  * @param item -> value specified in the text input
  */
 let addItem = (item) => {
-  TO_DO_LIST.value.push({
-    item: item,
-    status: "Pending",
+  axios({
+    method: "post",
+    url: `${API_URL.value}?action=insert`,
+    data: { item: item },
+  }).then(function (response) {
+    if (response.data === 0) {
+      retrieveList();
+    } else {
+      alert("Something went wrong, please try again!");
+    }
   });
 };
 /**
@@ -40,9 +48,9 @@ let addItem = (item) => {
  * the specified index passed
  *@param index -> position of object in toDoList array
  */
-let deleteItem = (index) => {
+let deleteItem = (id) => {
   if (confirm("Are you sure you want to delete this item ?")) {
-    TO_DO_LIST.value.splice(index, 1);
+    console.log(id);
   }
 };
 /**
@@ -56,5 +64,21 @@ let getBadgeClass = (status) => {
   if (status == "In-Progress") return "bg-info";
   if (status == "Done") return "bg-success";
 };
+/**
+ * This function returns a new date format
+ * (e.g 01/0/2022 -> January 01, 2022)
+ * @param date -> sql date format e.g 2022-03-17 (Y-m-d)
+ */
+let dateFormat = (date) => {
+  let format = { month: "long", day: "numeric", year: "numeric" };
+  return new Date(date).toLocaleString("en-US", format);
+};
 // ===============================RETURN OBJECTS==========================================
-export { TO_DO_LIST, addItem, getBadgeClass, deleteItem };
+export {
+  TO_DO_LIST,
+  addItem,
+  getBadgeClass,
+  deleteItem,
+  retrieveList,
+  dateFormat,
+};
