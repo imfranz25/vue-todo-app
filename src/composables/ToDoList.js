@@ -1,13 +1,11 @@
 import { ref } from "vue";
 import axios from "axios";
 import $ from "jquery";
-import "jquery/dist/jquery.min.js";
-import "datatables.net-dt/js/dataTables.dataTables";
-import "datatables.net-dt/css/jquery.dataTables.min.css";
 
 // ===============================INITIALIZATION==========================================
 const TO_DO_LIST = ref([]);
 const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
+let toDoItem = ref(null);
 // ===============================FUNCTIONS==========================================
 /**
  * This function will retrieve all of the data from the database (id, item, status, date_created)
@@ -28,6 +26,9 @@ let retrieveList = () => {
       setTimeout(() => $("#toDoTable").DataTable(), 1000);
     }
   });
+};
+let getItem = (index) => {
+  toDoItem = TO_DO_LIST[index];
 };
 /**
  * This function adds an item in the array -> TO_DO_LIST []
@@ -94,9 +95,11 @@ let dateFormat = (date) => {
 };
 export {
   TO_DO_LIST,
+  toDoItem,
   addItem,
   getBadgeClass,
   deleteItem,
   retrieveList,
   dateFormat,
+  getItem,
 };

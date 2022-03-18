@@ -23,8 +23,8 @@
           <tr>
             <th>#</th>
             <th>My To-Do List</th>
-            <th>Status</th>
             <th>Date Created</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -40,7 +40,14 @@
             </td>
             <td>
               <div class="d-block">
-                <button class="btn btn-primary">Edit</button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editItem"
+                >
+                  Edit
+                </button>
                 <button
                   @click="deleteItem(value.id)"
                   class="btn btn-danger mx-1"
@@ -56,6 +63,7 @@
     <!-- ** End To-Do List Table ** -->
   </div>
   <!-- ** End To-Do List Container ** -->
+  <EditItemModal />
 </template>
 
 <style scoped>
@@ -63,12 +71,7 @@
 </style>
 
 <script>
-import $ from "jquery";
-import "jquery/dist/jquery.min.js";
-import "datatables.net-dt/js/dataTables.dataTables";
-import "datatables.net-dt/css/jquery.dataTables.min.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+import EditItemModal from "@/components/EditItemModal.vue";
 import { ref, onMounted } from "vue";
 import {
   TO_DO_LIST,
@@ -81,9 +84,11 @@ import {
 
 export default {
   name: "TodoListComposition",
+  components: { EditItemModal },
   setup() {
     // ===============================INITIALIZATION==========================================
     let toDoItem = ref(null);
+    let listLength = ref(TO_DO_LIST.length);
     // ===============================FUNCTIONS==========================================
     /**
      * This seperate function will call the addItem
@@ -96,11 +101,10 @@ export default {
     };
     // ===============================HOOKS==========================================
     /**
-     * This Lifecyclehook will call the function retrieveList
+     * This Lifecyclehook will call the function retrieveList onMounted
      */
     onMounted(() => {
       retrieveList();
-      setTimeout(() => $("#toDoTable").DataTable(), 1000);
     });
     return {
       TO_DO_LIST,
@@ -109,6 +113,8 @@ export default {
       deleteItem,
       dateFormat,
       sendItem,
+      EditItemModal,
+      listLength,
     };
   },
 };
