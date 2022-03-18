@@ -100,7 +100,7 @@ export default {
      */
     onMounted(() => {
       retrieveList();
-      $("#toDoTable").DataTable();
+      setTimeout(() => $("#toDoTable").DataTable(), 1000);
     });
     return {
       TO_DO_LIST,

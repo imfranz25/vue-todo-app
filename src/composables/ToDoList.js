@@ -1,5 +1,9 @@
 import { ref } from "vue";
 import axios from "axios";
+import $ from "jquery";
+import "jquery/dist/jquery.min.js";
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
 
 // ===============================INITIALIZATION==========================================
 const TO_DO_LIST = ref([]);
@@ -11,7 +15,8 @@ const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
  * ('retrieve', 'update', 'delete', 'insert')
  * it will alert the user -> "Invalid Action Request" (callback == 1)
  * else proceed to the action specified (e.g retrieve -> retrieve data)
- * retrieveList function have self invoke behavior
+ * Every time this function is invoke it will reinitialize the datatable()
+ * to refresh pagination and its content
  */
 let retrieveList = () => {
   axios.get(`${API_URL.value}?action=retrieve`).then(function (response) {
@@ -20,6 +25,7 @@ let retrieveList = () => {
     } else {
       TO_DO_LIST.value.splice(0, TO_DO_LIST.value.length); // delete all items -> array
       TO_DO_LIST.value.push(...response.data); // put all the data objects -> array
+      setTimeout(() => $("#toDoTable").DataTable(), 1000);
     }
   });
 };
@@ -36,6 +42,7 @@ let addItem = (item) => {
     data: { item: item },
   }).then(function (response) {
     if (response.data === 0) {
+      $("#toDoTable").DataTable().destroy();
       retrieveList();
       alert("To-do List item successfully added");
     } else {
@@ -56,6 +63,7 @@ let deleteItem = (id) => {
       data: { id: id },
     }).then(function (response) {
       if (response.data === 0) {
+        $("#toDoTable").DataTable().destroy();
         retrieveList();
         alert("To-do List item successfully deleted");
       } else {
@@ -84,7 +92,6 @@ let dateFormat = (date) => {
   let format = { month: "long", day: "numeric", year: "numeric" };
   return new Date(date).toLocaleString("en-US", format);
 };
-// ===============================RETURN OBJECTS==========================================
 export {
   TO_DO_LIST,
   addItem,

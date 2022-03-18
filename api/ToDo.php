@@ -17,6 +17,7 @@
      * If the Request type is valid (present in the array)
      * return true (e.g action=retrieve -> return true)
      * else return false (e.g action=modify -> return false) NOT PRESENT IN ARRAY
+     * @param action -> action passed via url/api (e.g action="retrieve")
      */
     public function checkAction($action) {
       return in_array($action, $this->valid_actions);
@@ -54,7 +55,7 @@
     /**
      * This function will delete the specific record in the database
      * based on the id specified in the parameter
-     * If it has successfully delete/affect a row return
+     * If it has successfully delete/affect a row
      * it will return 0 (SUCCESS) else 1 (FAILED)
      */
     public function deleteItem($id) {
