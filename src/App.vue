@@ -3,7 +3,6 @@
 </template>
 
 <script>
-//components
 import ToDoListPage from "@/components/ToDoListComposition.vue";
 export default {
   name: "App",
