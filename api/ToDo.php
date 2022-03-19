@@ -57,11 +57,23 @@
      * based on the id specified in the parameter
      * If it has successfully delete/affect a row
      * it will return 0 (SUCCESS) else 1 (FAILED)
+     * @param id -> todoItem id in database (primary key)
      */
     public function deleteItem($id) {
       $this->conn->where('id', $id);
       $delete_item = $this->conn->delete('todo_tbl');
       return ($delete_item) ? 0 : 1;
+    }
+    /**
+     * This function will update the existing record
+     * @param id -> primary key
+     * @param item -> updated todo title
+     * @param status -> updated status
+     */
+    public function updateItem($id, $item, $status) {
+      $data = Array ('item' => $item, 'status' => $status);
+      $this->conn->where ('id', $id);
+      echo ($this->conn->update('todo_tbl', $data)) ? 0 : 1;
     }
   }
 ?>

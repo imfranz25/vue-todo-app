@@ -11,6 +11,7 @@
 
   //class instance ToDo ($conn -> comes from conn.php file where it is configured)
   $ToDo = new ToDo($conn);
+  //get the passed parameters object (e.g item: "Sample")
   $request = json_decode(file_get_contents("php://input"));
 
   /*
@@ -32,6 +33,11 @@
     } else if ($action === "delete") {
       $id = $request->id;
       echo $ToDo->deleteItem($id);
+    } else {
+      $id = $request->id;
+      $item = $request->item;
+      $status = $request->status;
+      echo $ToDo->updateItem($id, $item, $status);
     }
   } else { echo 1; }
 
