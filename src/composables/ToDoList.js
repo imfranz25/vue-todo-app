@@ -28,75 +28,62 @@ let retrieveList = () => {
   });
 };
 /**
- * This function adds an item in the array -> TO_DO_LIST []
+ * This function adds an item in the database
  * status -> "PENDING" by default
  * date_created -> "DATE TODAY"
  * @param item -> value specified in the text input
  */
 let addItem = (item) => {
-  axios({
-    method: "post",
-    url: `${API_URL.value}?action=insert`,
-    data: { item: item },
-  }).then(function (response) {
-    if (response.data === 0) {
-      $("#toDoTable").DataTable().destroy();
-      retrieveList();
-      alert("To-do List item successfully added");
-    } else {
-      alert("Something went wrong, please try again!");
-    }
-  });
+  axios
+    .post(`${API_URL.value}?action=insert`, { item: item })
+    .then(function (response) {
+      callback(response.data, "To-do Item addedd successfully");
+    });
 };
 /**
- * This function will delete an item in the toDoList array based in
- * the specified index passed
- *@param index -> position of object in toDoList array
+ * This function will delete an item/record in the database
+ *@param id ->record id
  */
 let deleteItem = (id) => {
   if (confirm("Are you sure you want to delete this item ?")) {
-    axios({
-      method: "post",
-      url: `${API_URL.value}?action=delete`,
-      data: { id: id },
-    }).then(function (response) {
-      if (response.data === 0) {
-        $("#toDoTable").DataTable().destroy();
-        retrieveList();
-        alert("To-do List item deleted successfully");
-      } else {
-        alert("Something went wrong, please try again!");
-      }
-    });
+    axios
+      .post(`${API_URL.value}?action=delete`, { id: id })
+      .then(function (response) {
+        callback(response.data, "To-do List item deleted successfully");
+      });
   }
 };
+/**
+ * This function will get the object based on the index specified in
+ * the parameter (e.g [0] first object store to -> viewItem)
+ * @param {index value for reference} index
+ */
 let getItem = (index) => {
   viewItem.value = TO_DO_LIST.value[index];
 };
+/**
+ * This function will trigger once the user cancel the editing form
+ * in order to reset data (data from the database)
+ * and also reset the viewItem to an empty object
+ */
 let clearItem = () => {
   viewItem.value = {};
-  $("#toDoTable").DataTable().destroy();
-  retrieveList();
+  refreshTable();
 };
+/**
+ * This function will create a axios http post request that will update records
+ * in the database -> (id, item, status)
+ */
 let updateItem = () => {
-  axios({
-    method: "post",
-    url: `${API_URL.value}?action=update`,
-    data: {
+  axios
+    .post(`${API_URL.value}?action=update`, {
       id: viewItem.value.id,
       item: viewItem.value.item,
       status: viewItem.value.status,
-    },
-  }).then(function (response) {
-    console.log(response.data);
-    if (response.data === 0) {
-      $("#toDoTable").DataTable().destroy();
-      retrieveList();
-      alert("To-do List item updated successfully");
-    } else {
-      alert("Something went wrong, please try again!");
-    }
-  });
+    })
+    .then(function (response) {
+      callback(response.data, "To-do item update succesfully");
+    });
 };
 /**
  * This getBadgeClass function will render the bg class from bootstrap class
@@ -118,6 +105,32 @@ let dateFormat = (date) => {
   let format = { month: "long", day: "numeric", year: "numeric" };
   return new Date(date).toLocaleString("en-US", format);
 };
+/**
+ * This seperate function will handle the response from the server
+ * to alert user if its success or not
+ * @param {0-> success, 1 -> error} response
+ * @param {Custom message for success alert} msg
+ */
+let callback = (response, msg) => {
+  if (response === 0) {
+    refreshTable();
+    alert(msg);
+  } else {
+    alert("Something went wrong, please try again!");
+  }
+};
+/**
+ * This function will refresh the table,
+ * Since the DataTable is already initialized
+ * it is necessary to destroy it first before
+ * we call the retrieve function again to
+ * reinitialized the datatable in order to read new/updated datas
+ */
+let refreshTable = () => {
+  $("#toDoTable").DataTable().destroy();
+  retrieveList();
+};
+// ===============================EXPORT==========================================
 export {
   TO_DO_LIST,
   addItem,
