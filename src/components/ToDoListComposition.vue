@@ -7,7 +7,12 @@
       <form @submit.prevent="sendItem">
         <div class="form-group row">
           <div class="col-10">
-            <input type="text" class="form-control" v-model="toDoItem" />
+            <input
+              type="text"
+              class="form-control"
+              v-model="toDoItem"
+              required
+            />
           </div>
           <div class="col-2">
             <button type="submit" class="btn btn-dark">Add</button>
@@ -17,8 +22,8 @@
     </div>
     <!-- ** End To-Do List Add Form ** -->
     <!-- To-Do List Table -->
-    <div class="mt-5">
-      <table class="table table-striped border border-secondary" id="toDoTable">
+    <div class="mt-5 table-container">
+      <table class="table table-striped table-bordered" id="toDoTable">
         <thead>
           <tr>
             <th>#</th>
@@ -41,6 +46,7 @@
             <td>
               <div class="d-block">
                 <button
+                  @click="getItem(index)"
                   type="button"
                   class="btn btn-primary"
                   data-bs-toggle="modal"
@@ -63,7 +69,81 @@
     <!-- ** End To-Do List Table ** -->
   </div>
   <!-- ** End To-Do List Container ** -->
-  <EditItemModal />
+  <!-- To-Do Item Update Modal -->
+  <div
+    class="modal fade"
+    id="editItem"
+    tabindex="-1"
+    aria-labelledby="editItemLabel"
+    aria-hidden="true"
+    v-if="!viewItem.length"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editItemLabel">Edit To-Do Item</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form @submit.prevent="updateItem()">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label"
+                >Date Created:</label
+              >
+              <input
+                type="text"
+                :value="dateFormat(viewItem.date_created)"
+                class="form-control"
+                disabled
+              />
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label"
+                >To-Do Title:</label
+              >
+              <input
+                type="text"
+                v-model="viewItem.item"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-5">
+              <label for="message-text" class="col-form-label">Status:</label>
+              <select class="form-control" v-model="viewItem.status" required>
+                <option value="Pending">Pending</option>
+                <option value="In-Progress">In-Progress</option>
+                <option value="Done">Done</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              @click="clearItem"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- ** End To-Do Item Update Modal ** -->
 </template>
 
 <style scoped>
@@ -71,7 +151,6 @@
 </style>
 
 <script>
-import EditItemModal from "@/components/EditItemModal.vue";
 import { ref, onMounted } from "vue";
 import {
   TO_DO_LIST,
@@ -80,11 +159,14 @@ import {
   deleteItem,
   retrieveList,
   dateFormat,
+  getItem,
+  viewItem,
+  clearItem,
+  updateItem,
 } from "@/composables/ToDoList.js";
 
 export default {
   name: "TodoListComposition",
-  components: { EditItemModal },
   setup() {
     // ===============================INITIALIZATION==========================================
     let toDoItem = ref(null);
@@ -113,8 +195,11 @@ export default {
       deleteItem,
       dateFormat,
       sendItem,
-      EditItemModal,
       listLength,
+      getItem,
+      viewItem,
+      clearItem,
+      updateItem,
     };
   },
 };

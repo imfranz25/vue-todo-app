@@ -1,3 +1,9 @@
 table {
-  box-shadow: 3px 2px black;
+  box-shadow: 3px 2px 10px rgba(0, 0, 0, .4);
+}
+div.dataTables_filter, div.dataTables_length {
+  padding-bottom: 30px;
+}
+div.dataTables_paginate .pagination{
+  padding-bottom: 50px;
 }

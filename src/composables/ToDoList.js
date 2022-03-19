@@ -5,7 +5,7 @@ import $ from "jquery";
 // ===============================INITIALIZATION==========================================
 const TO_DO_LIST = ref([]);
 const API_URL = ref("http://localhost/ojt-training-repo/api/action.php");
-let toDoItem = ref(null);
+let viewItem = ref({});
 // ===============================FUNCTIONS==========================================
 /**
  * This function will retrieve all of the data from the database (id, item, status, date_created)
@@ -26,9 +26,6 @@ let retrieveList = () => {
       setTimeout(() => $("#toDoTable").DataTable(), 1000);
     }
   });
-};
-let getItem = (index) => {
-  toDoItem = TO_DO_LIST[index];
 };
 /**
  * This function adds an item in the array -> TO_DO_LIST []
@@ -66,12 +63,40 @@ let deleteItem = (id) => {
       if (response.data === 0) {
         $("#toDoTable").DataTable().destroy();
         retrieveList();
-        alert("To-do List item successfully deleted");
+        alert("To-do List item deleted successfully");
       } else {
         alert("Something went wrong, please try again!");
       }
     });
   }
+};
+let getItem = (index) => {
+  viewItem.value = TO_DO_LIST.value[index];
+};
+let clearItem = () => {
+  viewItem.value = {};
+  $("#toDoTable").DataTable().destroy();
+  retrieveList();
+};
+let updateItem = () => {
+  axios({
+    method: "post",
+    url: `${API_URL.value}?action=update`,
+    data: {
+      id: viewItem.value.id,
+      item: viewItem.value.item,
+      status: viewItem.value.status,
+    },
+  }).then(function (response) {
+    console.log(response.data);
+    if (response.data === 0) {
+      $("#toDoTable").DataTable().destroy();
+      retrieveList();
+      alert("To-do List item updated successfully");
+    } else {
+      alert("Something went wrong, please try again!");
+    }
+  });
 };
 /**
  * This getBadgeClass function will render the bg class from bootstrap class
@@ -95,11 +120,13 @@ let dateFormat = (date) => {
 };
 export {
   TO_DO_LIST,
-  toDoItem,
   addItem,
   getBadgeClass,
   deleteItem,
   retrieveList,
   dateFormat,
   getItem,
+  viewItem,
+  clearItem,
+  updateItem,
 };
